@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion Hub | Community Comments</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .comments-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .comments-container h2 {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* 评论列表样式 - 交替背景色 */
+    .comment-list {
+      margin-bottom: 30px;
+    }
+    .comment-item {
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    /* 奇数条评论背景色 */
+    .comment-item:nth-child(odd) {
+      background: #f8f9fa;
+    }
+    /* 偶数条评论背景色 */
+    .comment-item:nth-child(even) {
+      background: #f0f2f5;
+    }
+    .comment-user {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .comment-content {
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* 评论输入区域样式 */
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .comment-form input,
+    .comment-form textarea {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .comment-form textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .comment-form button {
+      align-self: flex-start;
+      padding: 10px 20px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .comment-form button:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-title">
+          <img src="public/images/logo.png" class="brand-logo">Fashion <span>Hub</span>
+        </div>
+      </div>
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="cart.html" class="nav-link">Shop</a></li>
+        <li class="nav-item"><a href="comments.html" class="nav-link active">About</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="comments-container">
+    <h2>Community Comments</h2>
+
+    <div class="comment-list" id="commentList">
+      <!-- 评论会通过JS动态渲染 -->
+    </div>
+
+    <form class="comment-form" id="commentForm">
+      <input type="text" id="userName" placeholder="Your Name" required>
+      <textarea id="commentContent" placeholder="Leave a comment..." required></textarea>
+      <button type="submit">Submit Comment</button>
+    </form>
+  </div>
+
+  <script>
+    let comments = JSON.parse(localStorage.getItem('comments')) || [];
+    const commentList = document.getElementById('commentList');
+    const commentForm = document.getElementById('commentForm');
+    const userName = document.getElementById('userName');
+    const commentContent = document.getElementById('commentContent');
+
+    function renderComments() {
+      commentList.innerHTML = '';
+      if (comments.length === 0) {
+        commentList.innerHTML = '<p>No comments yet. Be the first to leave one!</p>';
+        return;
+      }
+      comments.forEach((comment, index) => {
+        const commentItem = document.createElement('div');
+        commentItem.className = 'comment-item';
+        commentItem.innerHTML = `
+          <div class="comment-user">${comment.user}</div>
+          <div class="comment-content">${comment.content}</div>
+        `;
+        commentList.appendChild(commentItem);
+      });
+    }
+
+    commentForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!userName.value || !commentContent.value) return;
+      comments.push({
+        user: userName.value,
+        content: commentContent.value
+      });
+      localStorage.setItem('comments', JSON.stringify(comments));
+      userName.value = '';
+      commentContent.value = '';
+      renderComments();
+    });
+
+    renderComments();
+  </script>
+</body>
+</html>
+
+
+
